@@ -1,0 +1,17 @@
+.env
+*.keystore
+*.jks
+key.properties
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.dart_tool/
+build/
+.flutter-plugins*
+local.properties
+.gradle/
+.idea/
+*.iml
+node_modules/
+storage_data/
