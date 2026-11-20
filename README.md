@@ -1,4 +1,4 @@
-# MAYA AI
+# ALLEN AI
 
 Voice-controlled Android phone agent (Bangla + English + Banglish). Say a command and MAYA controls the phone and posts to social media.
 

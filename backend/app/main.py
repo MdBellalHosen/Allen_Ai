@@ -6,7 +6,7 @@ from app.core.logging import setup_logging
 setup_logging()
 settings = get_settings()
 
-app = FastAPI(title="MAYA AI backend", version="0.1.0")
+app = FastAPI(title="ALLEN AI backend", version="0.1.0")
 
 
 @app.get("/health")

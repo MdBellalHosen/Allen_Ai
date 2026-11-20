@@ -19,7 +19,7 @@ class MayaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'MAYA AI',
+      title: 'ALLEN AI',
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
       routerConfig: buildRouter(onboarded: onboarded),

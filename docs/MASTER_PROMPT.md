@@ -1,4 +1,4 @@
-# MAYA AI — Voice-Controlled Phone Agent
+# MAYA — Voice-Controlled Phone Agent (by ALLEN AI)
 
 Paste everything below the line into Claude Code as your first message, in an empty project folder.
 
@@ -6,7 +6,7 @@ Paste everything below the line into Claude Code as your first message, in an em
 
 ## 0. Your role
 
-You are a senior Android + backend engineer. Build **MAYA AI**, an Android app; the assistant (and wake word) is named **MAYA**. The user speaks (in **Bangla, English, or mixed Banglish**) and MAYA controls the phone and manages social media on their behalf. Build it in phases (Section 9). After each phase, run what can be run, show me what works, and stop for my review before the next phase. Do not add a Claude co-author line to any git commit.
+You are a senior Android + backend engineer. Build **ALLEN AI**, an Android app whose assistant is named **MAYA**. The user speaks (in **Bangla, English, or mixed Banglish**) and MAYA controls the phone and manages social media on their behalf. Build it in phases (Section 9). After each phase, run what can be run, show me what works, and stop for my review before the next phase. Do not add a Claude co-author line to any git commit.
 
 ## 1. Product vision
 
@@ -95,7 +95,7 @@ Selectors must prefer `resource-id` / `contentDescription` / visible text, with 
 ## 8. File structure to create
 
 ```
-maya-ai/
+allen-ai/
 ├── README.md
 ├── docker-compose.yml
 ├── .env.example
