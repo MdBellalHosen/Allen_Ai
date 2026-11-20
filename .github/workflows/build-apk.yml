@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write   # needed to publish the APK as a GitHub Release
+
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -46,3 +49,16 @@ jobs:
         with:
           name: allen-ai-debug-apk
           path: app/build/app/outputs/flutter-apk/app-debug.apk
+
+      # Stable download link for the phone: Releases > latest-apk
+      - name: Publish APK as a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/app/outputs/flutter-apk/app-debug.apk allen-ai-debug.apk
+          gh release delete latest-apk --cleanup-tag --yes || true
+          gh release create latest-apk allen-ai-debug.apk \
+            --target "${{ github.sha }}" \
+            --prerelease \
+            --title "ALLEN AI debug APK (latest)" \
+            --notes "Debug build of commit ${{ github.sha }}. Install on Android, then enable ALLEN AI in Settings > Accessibility."
