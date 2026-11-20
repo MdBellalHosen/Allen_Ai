@@ -1,0 +1,20 @@
+name: Evaluate command set (live LLM)
+
+# Needs repo secret ANTHROPIC_API_KEY and repo variable LLM_MODEL. Run manually from the Actions tab.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e "backend[dev]"
+      - working-directory: backend
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_MODEL: ${{ vars.LLM_MODEL }}
+        run: python -m evals.run_eval

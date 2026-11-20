@@ -16,3 +16,18 @@ def require_device(
         return verify_device_token(settings.secret_key, authorization[7:].strip())
     except TokenError as e:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, str(e)) from e
+
+
+_planner: "AgentPlanner | None" = None
+
+
+def get_planner() -> "AgentPlanner":
+    """Process-wide planner (sessions live in memory). Tests override this dependency."""
+    from app.agent.llm import AnthropicClient
+    from app.agent.planner import AgentPlanner
+
+    global _planner
+    if _planner is None:
+        s = get_settings()
+        _planner = AgentPlanner(AnthropicClient(s), s)
+    return _planner
