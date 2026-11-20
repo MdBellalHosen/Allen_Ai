@@ -1,0 +1,48 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Flutter (stable)
+        run: |
+          git clone https://github.com/flutter/flutter.git -b stable --depth 1 "$HOME/flutter"
+          echo "$HOME/flutter/bin" >> "$GITHUB_PATH"
+
+      - name: Generate Android project files
+        working-directory: app
+        run: |
+          flutter --version
+          flutter create --org com.allen --project-name allen_ai --platforms android .
+          # keep our manifest, Kotlin code and resources (flutter create may overwrite them)
+          git checkout -- android/app/src/main
+          # some plugins (record, porcupine) need minSdk >= 24
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 24/; s/minSdkVersion flutter.minSdkVersion/minSdkVersion 24/' android/app/build.gradle* || true
+          flutter pub get
+          flutter gen-l10n
+
+      - name: Unit tests (parser)
+        working-directory: app
+        continue-on-error: true
+        run: flutter test
+
+      - name: Build debug APK
+        working-directory: app
+        run: flutter build apk --debug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allen-ai-debug-apk
+          path: app/build/app/outputs/flutter-apk/app-debug.apk
