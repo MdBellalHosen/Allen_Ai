@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run once after `flutter create` (CI does this too). Patches the generated Android build files:
 #  1. minSdk 24  (record / porcupine need >= 23-24)
-#  2. compileSdk 35 for plugin subprojects: older plugins (flutter_voice_processor) compile against
+#  2. compileSdk 36 for plugin subprojects: older plugins (flutter_voice_processor) compile against
 #     android-31 but their androidx dependencies require 34+.
 set -euo pipefail
 cd "$(dirname "$0")/../app/android"
@@ -15,7 +15,7 @@ cat >> build.gradle.kts <<'KTS'
 subprojects {
     if (name != "app") {
         afterEvaluate {
-            extensions.findByName("android")?.withGroovyBuilder { "compileSdkVersion"(35) }
+            extensions.findByName("android")?.withGroovyBuilder { "compileSdkVersion"(36) }
         }
     }
 }
@@ -27,7 +27,7 @@ cat >> build.gradle <<'GRADLE'
 subprojects {
     if (project.name != "app") {
         afterEvaluate { p ->
-            if (p.hasProperty("android")) { p.android.compileSdkVersion 35 }
+            if (p.hasProperty("android")) { p.android.compileSdkVersion 36 }
         }
     }
 }
