@@ -30,6 +30,7 @@ jobs:
           git checkout -- android/app/src/main
           # some plugins (record, porcupine) need minSdk >= 24
           sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 24/; s/minSdkVersion flutter.minSdkVersion/minSdkVersion 24/' android/app/build.gradle* || true
+          rm -f test/widget_test.dart   # default sample test from flutter create
           flutter pub get
           flutter gen-l10n
 
