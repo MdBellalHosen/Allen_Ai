@@ -3,18 +3,22 @@ setlocal enabledelayedexpansion
 title ALLEN AI setup
 cd /d "%~dp0backend"
 
-where python >nul 2>nul
-if errorlevel 1 (
-  echo Python install kora nai. Age install korun: https://www.python.org/downloads/
-  echo Install-er somoy "Add python.exe to PATH" tick din, tarpor ei file abar chalan.
+set PY=
+py -3.12 -V >nul 2>nul && set PY=py -3.12
+if not defined PY ( py -3.13 -V >nul 2>nul && set PY=py -3.13 )
+if not defined PY ( python -V >nul 2>nul && set PY=python )
+if not defined PY (
+  echo Python pawa jayni. Install korun: https://www.python.org/downloads/
+  echo Install-er por PC restart kore ei file abar chalan.
   start https://www.python.org/downloads/
   pause
   exit /b 1
 )
+echo Python: !PY!
 
 if not exist .venv (
   echo [1/4] Python environment banano hocche...
-  python -m venv .venv
+  !PY! -m venv .venv
   if errorlevel 1 ( echo venv toiri hoy nai & pause & exit /b 1 )
 )
 call .venv\Scripts\activate.bat
