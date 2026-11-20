@@ -29,15 +29,25 @@ if errorlevel 1 ( echo pip install fail korse. Upore error ta dekhe amake pathan
 
 if not exist .env (
   echo.
-  echo [3/4] Setup. Free key nite: https://console.groq.com/keys
-  set /p KEY=Groq API key paste korun: 
+  echo [3/4] Setup. Free AI key lagbe:
+  echo   1 = Gemini ^(Google account diye, shohoj^): https://aistudio.google.com/apikey
+  echo   2 = Groq: https://console.groq.com/keys
+  set /p CH=1 ba 2 likhe Enter din: 
+  if "!CH!"=="2" (
+    set URL=https://api.groq.com/openai/v1
+    set MODEL=openai/gpt-oss-120b
+  ) else (
+    set URL=https://generativelanguage.googleapis.com/v1beta/openai
+    set MODEL=gemini-2.5-flash
+  )
+  set /p KEY=API key paste korun ^(right-click = paste^): 
   set /p CODE=Ekta gopon code din ^(jemon allen12345^): 
   for /f %%i in ('python -c "import secrets;print(secrets.token_hex(24))"') do set SECRET=%%i
   (
     echo LLM_PROVIDER=openai_compat
-    echo LLM_BASE_URL=https://api.groq.com/openai/v1
+    echo LLM_BASE_URL=!URL!
     echo LLM_API_KEY=!KEY!
-    echo LLM_MODEL=openai/gpt-oss-120b
+    echo LLM_MODEL=!MODEL!
     echo SECRET_KEY=!SECRET!
     echo REGISTRATION_CODE=!CODE!
   ) > .env
