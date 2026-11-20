@@ -23,11 +23,11 @@ _planner: "AgentPlanner | None" = None
 
 def get_planner() -> "AgentPlanner":
     """Process-wide planner (sessions live in memory). Tests override this dependency."""
-    from app.agent.llm import AnthropicClient
+    from app.agent.llm import build_llm
     from app.agent.planner import AgentPlanner
 
     global _planner
     if _planner is None:
         s = get_settings()
-        _planner = AgentPlanner(AnthropicClient(s), s)
+        _planner = AgentPlanner(build_llm(s), s)
     return _planner

@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     anthropic_base_url: str = "https://api.anthropic.com"
     llm_model: str = ""  # configurable, never hardcoded in code paths
+    # "anthropic" (paid) or "openai_compat" (Groq / Gemini / OpenRouter / Ollama: free options)
+    llm_provider: str = "anthropic"
+    llm_base_url: str = ""
+    llm_api_key: str = ""
     llm_max_tokens: int = 1024
     agent_max_steps: int = 15
     agent_session_ttl_s: int = 600
