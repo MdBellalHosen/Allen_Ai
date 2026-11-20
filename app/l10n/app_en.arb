@@ -20,5 +20,26 @@
   "language": "Language",
   "languageSystem": "Follow system",
   "languageEnglish": "English",
-  "languageBangla": "বাংলা"
+  "languageBangla": "বাংলা",
+  "listening": "Listening…",
+  "processing": "Thinking…",
+  "speaking": "Speaking…",
+  "idle": "Ready",
+  "echoReply": "You said: {text}",
+  "@echoReply": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "noSpeech": "I didn't catch that. Please try again.",
+  "micDenied": "Microphone permission is needed.",
+  "voiceLanguage": "Voice language",
+  "voiceBn": "বাংলা",
+  "voiceEn": "English",
+  "voiceAuto": "Auto-detect (cloud)",
+  "wakeWord": "Wake word “Hey Maya”",
+  "wakeWordOff": "Not available: add the Picovoice key and keyword file.",
+  "sttUnavailable": "Speech recognition is not available for this language on your phone."
 }

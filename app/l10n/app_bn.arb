@@ -20,5 +20,26 @@
   "language": "ভাষা",
   "languageSystem": "সিস্টেম অনুযায়ী",
   "languageEnglish": "English",
-  "languageBangla": "বাংলা"
+  "languageBangla": "বাংলা",
+  "listening": "শুনছি…",
+  "processing": "ভাবছি…",
+  "speaking": "বলছি…",
+  "idle": "প্রস্তুত",
+  "echoReply": "আপনি বলেছেন: {text}",
+  "@echoReply": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "noSpeech": "বুঝতে পারিনি, আবার বলুন।",
+  "micDenied": "মাইক্রোফোনের অনুমতি দরকার।",
+  "voiceLanguage": "ভয়েসের ভাষা",
+  "voiceBn": "বাংলা",
+  "voiceEn": "English",
+  "voiceAuto": "স্বয়ংক্রিয় (ক্লাউড)",
+  "wakeWord": "ওয়েক ওয়ার্ড “Hey Maya”",
+  "wakeWordOff": "চালু নেই: Picovoice কী ও কীওয়ার্ড ফাইল যোগ করুন।",
+  "sttUnavailable": "আপনার ফোনে এই ভাষার স্পিচ রিকগনিশন পাওয়া যাচ্ছে না।"
 }

@@ -1,7 +1,7 @@
 name: maya
 description: ALLEN AI — MAYA voice-controlled phone agent (Android).
 publish_to: "none"
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
@@ -15,6 +15,12 @@ dependencies:
   go_router: ^14.0.0
   shared_preferences: ^2.2.0
   permission_handler: ^11.3.0
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.0.0
+  record: ^5.1.0
+  http: ^1.2.0
+  path_provider: ^2.1.0
+  porcupine_flutter: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -24,3 +30,5 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+  assets:
+    - assets/wakeword/

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/di.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../../voice/voice_controller.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,27 +11,58 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final voice = ServicesScope.of(context).voice;
     return Scaffold(
       appBar: AppBar(
         title: Text(t.appName),
-        actions: [
-          IconButton(icon: const Icon(Icons.settings), onPressed: () => context.push('/settings')),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.settings), onPressed: () => context.push('/settings'))],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(t.homeTitle, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 32),
-            // Phase 2: wire this button to STT.
-            FilledButton.icon(
-              onPressed: null,
-              icon: const Icon(Icons.mic),
-              label: Text(t.tapToTalk),
+      body: ListenableBuilder(
+        listenable: voice,
+        builder: (context, _) {
+          final busy = voice.state == VoiceState.processing || voice.state == VoiceState.speaking;
+          final listening = voice.state == VoiceState.listening;
+          final status = switch (voice.state) {
+            VoiceState.listening => t.listening,
+            VoiceState.processing => t.processing,
+            VoiceState.speaking => t.speaking,
+            _ => t.idle,
+          };
+          final hint = switch (voice.message) {
+            'mic' => t.micDenied,
+            'nospeech' => t.noSpeech,
+            'stt' => t.sttUnavailable,
+            _ => null,
+          };
+          return Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                Text(t.homeTitle, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+                const SizedBox(height: 8),
+                Text(status, style: Theme.of(context).textTheme.labelLarge),
+                const SizedBox(height: 24),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(voice.transcript, style: Theme.of(context).textTheme.headlineSmall),
+                  ),
+                ),
+                if (hint != null) Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(hint)),
+                SizedBox(
+                  width: 96,
+                  height: 96,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(shape: const CircleBorder(), padding: EdgeInsets.zero),
+                    onPressed: busy ? voice.cancel : voice.toggle,
+                    child: Icon(busy ? Icons.stop : (listening ? Icons.hearing : Icons.mic), size: 44),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(t.tapToTalk),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

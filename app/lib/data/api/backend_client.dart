@@ -1,1 +1,55 @@
-// Backend HTTP client (Phase 2).
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
+
+import '../../core/config.dart';
+
+class SttResponse {
+  SttResponse(this.text, this.language);
+  final String text;
+  final String language; // bn / en / und ...
+}
+
+class BackendException implements Exception {
+  BackendException(this.status, this.message);
+  final int status;
+  final String message;
+  @override
+  String toString() => 'BackendException($status): $message';
+}
+
+class BackendClient {
+  BackendClient({this.getToken, this.onUnauthorized, http.Client? client}) : _http = client ?? http.Client();
+  final http.Client _http;
+  final Future<String> Function()? getToken;
+  final Future<void> Function()? onUnauthorized; // clears the cached token so the next call re-registers
+
+  Uri _u(String p) => Uri.parse('${AppConfig.backendUrl}$p');
+
+  Future<String> registerDevice(String deviceId) async {
+    final r = await _http.post(
+      _u('/v1/auth/device'),
+      headers: {'content-type': 'application/json'},
+      body: jsonEncode({'device_id': deviceId, 'registration_code': AppConfig.registrationCode}),
+    );
+    if (r.statusCode != 200) throw BackendException(r.statusCode, r.body);
+    return jsonDecode(r.body)['token'] as String;
+  }
+
+  Future<SttResponse> transcribe(File audio, {String? languageHint, bool retried = false}) async {
+    final token = await getToken!();
+    final req = http.MultipartRequest('POST', _u('/v1/stt'))
+      ..headers['authorization'] = 'Bearer $token'
+      ..files.add(await http.MultipartFile.fromPath('file', audio.path));
+    if (languageHint != null) req.fields['language'] = languageHint;
+    final res = await http.Response.fromStream(await _http.send(req).timeout(const Duration(seconds: 60)));
+    if (res.statusCode == 401 && !retried && onUnauthorized != null) {
+      await onUnauthorized!();
+      return transcribe(audio, languageHint: languageHint, retried: true);
+    }
+    if (res.statusCode != 200) throw BackendException(res.statusCode, res.body);
+    final j = jsonDecode(utf8.decode(res.bodyBytes));
+    return SttResponse(j['text'] as String, j['language'] as String);
+  }
+}

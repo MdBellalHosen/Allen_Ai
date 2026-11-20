@@ -13,6 +13,7 @@ dependencies = [
   "psycopg[binary]>=3.2",
   "redis>=5.0",
   "cryptography>=42",
+  "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]
