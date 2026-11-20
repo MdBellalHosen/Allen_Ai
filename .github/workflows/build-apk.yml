@@ -28,8 +28,7 @@ jobs:
           flutter create --org com.allen --project-name allen_ai --platforms android .
           # keep our manifest, Kotlin code and resources (flutter create may overwrite them)
           git checkout -- android/app/src/main
-          # some plugins (record, porcupine) need minSdk >= 24
-          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 24/; s/minSdkVersion flutter.minSdkVersion/minSdkVersion 24/' android/app/build.gradle* || true
+          ../scripts/patch_android_build.sh
           rm -f test/widget_test.dart   # default sample test from flutter create
           flutter pub get
           flutter gen-l10n

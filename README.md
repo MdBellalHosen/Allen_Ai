@@ -14,7 +14,9 @@ Voice-controlled Android phone agent (Bangla + English + Banglish). Say a comman
 ## Run app
 ```bash
 cd app
-flutter create --org com.allen --project-name allen_ai --platforms android .   # one time, generates the android/ gradle files. It must keep package com.allen.allen_ai;
+flutter create --org com.allen --project-name allen_ai --platforms android .   # one time
+git checkout -- android/app/src/main   # restore our manifest + Kotlin code
+../scripts/patch_android_build.sh      # minSdk 24 + compileSdk fix for old plugins (Git Bash / WSL)
 # if it overwrites AndroidManifest.xml / MainActivity.kt, restore them with `git checkout -- android/app/src/main`
 flutter gen-l10n
 flutter run \
