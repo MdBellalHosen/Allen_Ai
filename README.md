@@ -4,7 +4,7 @@ Voice-controlled Android phone agent (Bangla + English + Banglish). Say a comman
 
 - Full spec / build prompt: [docs/MASTER_PROMPT.md](docs/MASTER_PROMPT.md)
 - Android only (iOS does not let an app control other apps).
-- Status: **Phase 3** (voice loop + phone control: open apps, YouTube search, media, volume, torch, scroll, back/home). After install, enable *ALLEN AI* in Android Settings > Accessibility.
+- Status: **Phase 4** (voice + phone control + Claude agent with confirmations and kill switch). Install the APK from Releases > latest-apk, enable ALLEN AI in Settings > Accessibility, then set the backend address in the app Settings.
 
 ## Run backend
 ```bash

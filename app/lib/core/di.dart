@@ -26,7 +26,12 @@ class Services {
     final prefs = await SharedPreferences.getInstance();
     final settings = SettingsStore(prefs);
     final auth = AuthRepo(prefs);
-    final backend = BackendClient(getToken: auth.token, onUnauthorized: auth.clearToken);
+    final backend = BackendClient(
+      getToken: auth.token,
+      onUnauthorized: auth.clearToken,
+      baseUrl: () => settings.backendUrl,
+      registrationCode: () => settings.registrationCode,
+    );
     auth.backend = backend;
     final bridge = DeviceBridge();
     final dispatcher = ToolDispatcher(bridge);

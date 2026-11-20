@@ -64,5 +64,13 @@
   "agentError": "আমার এআই ব্রেইনের সাথে যোগাযোগ করা যাচ্ছে না। ব্যাকএন্ডের ঠিকানা ও এপিআই কী দেখুন।",
   "confirmTitle": "নিশ্চিত করুন",
   "confirmYes": "হ্যাঁ",
-  "confirmNo": "না"
+  "confirmNo": "না",
+  "backendSection": "ব্যাকএন্ড (এআই এজেন্ট ও ক্লাউড ভয়েসের জন্য)",
+  "backendUrl": "ব্যাকএন্ডের ঠিকানা",
+  "registrationCode": "রেজিস্ট্রেশন কোড",
+  "save": "সেভ",
+  "saved": "সেভ হয়েছে",
+  "testConnection": "কানেকশন টেস্ট",
+  "connectionOk": "ব্যাকএন্ড পাওয়া গেছে",
+  "connectionFailed": "ব্যাকএন্ডে পৌঁছানো যায়নি"
 }

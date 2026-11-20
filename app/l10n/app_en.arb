@@ -64,5 +64,13 @@
   "agentError": "I couldn't reach my assistant brain. Check the backend address and API key.",
   "confirmTitle": "Please confirm",
   "confirmYes": "Yes",
-  "confirmNo": "No"
+  "confirmNo": "No",
+  "backendSection": "Backend (for the AI agent and cloud voice)",
+  "backendUrl": "Backend address",
+  "registrationCode": "Registration code",
+  "save": "Save",
+  "saved": "Saved",
+  "testConnection": "Test connection",
+  "connectionOk": "Backend reachable",
+  "connectionFailed": "Could not reach the backend"
 }

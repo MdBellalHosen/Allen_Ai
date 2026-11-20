@@ -20,18 +20,32 @@ class BackendException implements Exception {
 }
 
 class BackendClient {
-  BackendClient({this.getToken, this.onUnauthorized, http.Client? client}) : _http = client ?? http.Client();
+  BackendClient({this.getToken, this.onUnauthorized, this.baseUrl, this.registrationCode, http.Client? client})
+      : _http = client ?? http.Client();
   final http.Client _http;
   final Future<String> Function()? getToken;
   final Future<void> Function()? onUnauthorized; // clears the cached token so the next call re-registers
 
-  Uri _u(String p) => Uri.parse('${AppConfig.backendUrl}$p');
+  /// Read on every call so changing the address in Settings takes effect immediately.
+  final String Function()? baseUrl;
+  final String Function()? registrationCode;
+
+  Uri _u(String p) => Uri.parse('${(baseUrl ?? () => AppConfig.backendUrl)()}$p');
+
+  Future<bool> health() async {
+    try {
+      final r = await _http.get(_u('/health')).timeout(const Duration(seconds: 8));
+      return r.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
 
   Future<String> registerDevice(String deviceId) async {
     final r = await _http.post(
       _u('/v1/auth/device'),
       headers: {'content-type': 'application/json'},
-      body: jsonEncode({'device_id': deviceId, 'registration_code': AppConfig.registrationCode}),
+      body: jsonEncode({'device_id': deviceId, 'registration_code': (registrationCode ?? () => AppConfig.registrationCode)()}),
     );
     if (r.statusCode != 200) throw BackendException(r.statusCode, r.body);
     return jsonDecode(r.body)['token'] as String;
