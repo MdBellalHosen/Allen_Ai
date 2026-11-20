@@ -16,10 +16,23 @@ if not defined PY (
 )
 echo Python: !PY!
 
-if not exist .venv (
+if not exist .venv\Scripts\activate.bat (
   echo [1/4] Python environment banano hocche...
-  !PY! -m venv .venv
-  if errorlevel 1 ( echo venv toiri hoy nai & pause & exit /b 1 )
+  if exist .venv rmdir /s /q .venv
+  !PY! -m venv .venv >nul 2>nul
+  if not exist .venv\Scripts\activate.bat (
+    if exist .venv rmdir /s /q .venv
+    python3.12 -m venv .venv >nul 2>nul
+  )
+  if not exist .venv\Scripts\activate.bat (
+    if exist .venv rmdir /s /q .venv
+    python -m venv .venv
+  )
+  if not exist .venv\Scripts\activate.bat (
+    echo venv toiri hoy nai. Python 3.12 ^(python.org installer^) install kore abar chalan.
+    pause
+    exit /b 1
+  )
 )
 call .venv\Scripts\activate.bat
 
