@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../agent/rule_parser.dart';
+import '../agent/tool_call.dart';
+import '../agent/tool_dispatcher.dart';
 import '../core/logger.dart';
 import '../core/settings_store.dart';
 import '../data/api/backend_client.dart';
@@ -14,20 +17,22 @@ import 'wake_word_service.dart';
 
 enum VoiceState { idle, listening, processing, speaking, error }
 
-/// Phase 2 voice loop: wake word / tap -> STT -> live transcript -> echo the transcript by voice.
-/// Phase 4 replaces the echo with the LLM agent.
+/// Voice loop: wake word / tap -> STT -> live transcript -> command -> device tools -> spoken reply.
+/// Phase 3 maps the transcript with [RuleParser]; Phase 4 swaps in the LLM agent.
 class VoiceController extends ChangeNotifier {
   VoiceController({
     required this.settings,
     required this.backend,
     required this.tts,
     required this.wake,
+    required this.dispatcher,
   });
 
   final SettingsStore settings;
   final BackendClient backend;
   final TtsService tts;
   final WakeWordService wake;
+  final ToolDispatcher dispatcher;
 
   VoiceState state = VoiceState.idle;
   String transcript = '';
@@ -118,13 +123,49 @@ class VoiceController extends ChangeNotifier {
       await _syncWake();
       return;
     }
+    await _execute(text, r?.language);
+  }
+
+  /// Dev helper: run a typed command through the same path as speech (proves the device layer).
+  Future<void> runText(String text) async {
+    final cmd = text.trim();
+    if (cmd.isEmpty || (state != VoiceState.idle && state != VoiceState.error)) return;
+    await wake.stop();
+    transcript = cmd;
+    await _execute(cmd, null);
+  }
+
+  Future<void> _execute(String text, String? sttLang) async {
     _set(VoiceState.processing);
-    final lang = LanguageDetector.replyLanguage(text, sttLanguage: r?.language);
+    final lang = LanguageDetector.replyLanguage(text, sttLanguage: sttLang);
     final t = lookupAppLocalizations(Locale(lang == SpokenLang.bn ? 'bn' : 'en'));
+    final calls = RuleParser.parse(text);
+    final String reply;
+    if (calls.isEmpty) {
+      reply = t.notUnderstood(text);
+    } else {
+      final results = await dispatcher.runAll(calls);
+      reply = _replyFor(t, results);
+    }
     _set(VoiceState.speaking);
-    await tts.speak(t.echoReply(text), lang);
+    await tts.speak(reply, lang);
     _set(VoiceState.idle);
     await _syncWake();
+  }
+
+  String _replyFor(AppLocalizations t, List<ToolResult> results) {
+    final bad = results.where((r) => !r.ok);
+    if (bad.isNotEmpty) {
+      final m = bad.first.message;
+      if (m == 'accessibility_off') return t.needAccessibility;
+      if (m.startsWith('sensitive_screen')) return t.sensitiveRefused;
+      if (m == 'node_not_found') return t.couldntFind;
+      if (m == 'app_not_found' || m == 'app_not_launchable') return t.appNotFound;
+      if (m == 'launch_blocked') return t.launchBlocked;
+      return t.actionFailed;
+    }
+    if (results.any((r) => r.message == 'panel_opened')) return t.panelOpened;
+    return t.actionDone;
   }
 
   @override

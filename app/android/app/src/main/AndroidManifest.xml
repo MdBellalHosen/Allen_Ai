@@ -10,6 +10,11 @@
     <queries>
         <intent><action android:name="android.speech.RecognitionService" /></intent>
         <intent><action android:name="android.intent.action.TTS_SERVICE" /></intent>
+        <!-- Lets ALLEN find installed apps by name (open_app). -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
     </queries>
 
     <application
@@ -35,6 +40,17 @@
             android:exported="false"
             android:foregroundServiceType="microphone" />
         <meta-data android:name="flutterEmbedding" android:value="2" />
-        <!-- Phase 3: AllenAccessibilityService + overlay permission. -->
+        <service
+            android:name=".accessibility.AllenAccessibilityService"
+            android:exported="true"
+            android:label="ALLEN AI"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
     </application>
 </manifest>

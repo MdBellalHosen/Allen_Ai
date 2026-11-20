@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_description">ALLEN taps, scrolls and types in other apps when you give a voice command. Screen content is read only while a command is running.</string>
+</resources>

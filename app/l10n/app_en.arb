@@ -41,5 +41,24 @@
   "voiceAuto": "Auto-detect (cloud)",
   "wakeWord": "Wake word “Hey Allen”",
   "wakeWordOff": "Not available: add the Picovoice key and keyword file.",
-  "sttUnavailable": "Speech recognition is not available for this language on your phone."
+  "sttUnavailable": "Speech recognition is not available for this language on your phone.",
+  "actionDone": "Okay.",
+  "actionFailed": "That didn't work.",
+  "needAccessibility": "Please turn on ALLEN in Accessibility settings first.",
+  "sensitiveRefused": "I won't act on password or payment screens. Please do that yourself.",
+  "couldntFind": "I couldn't find that on the screen.",
+  "appNotFound": "I couldn't find that app.",
+  "panelOpened": "I opened the settings panel. Android needs you to flip the switch yourself.",
+  "launchBlocked": "Android blocked opening the app from the background. Open ALLEN first and try again.",
+  "notUnderstood": "I heard: {text}. I can't do that yet.",
+  "@notUnderstood": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "typeCommand": "Type a command",
+  "accessibilityOn": "Enabled",
+  "openSettings": "Open settings"
 }

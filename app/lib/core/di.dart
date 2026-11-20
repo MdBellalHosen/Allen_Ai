@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/api/backend_client.dart';
 import '../data/repositories/auth_repo.dart';
+import '../agent/tool_dispatcher.dart';
 import '../platform/device_bridge.dart';
 import '../voice/tts_service.dart';
 import '../voice/voice_controller.dart';
@@ -25,9 +26,16 @@ class Services {
     final auth = AuthRepo(prefs);
     final backend = BackendClient(getToken: auth.token, onUnauthorized: auth.clearToken);
     auth.backend = backend;
-    final voice = VoiceController(settings: settings, backend: backend, tts: TtsService(), wake: WakeWordService());
+    final bridge = DeviceBridge();
+    final voice = VoiceController(
+      settings: settings,
+      backend: backend,
+      tts: TtsService(),
+      wake: WakeWordService(),
+      dispatcher: ToolDispatcher(bridge),
+    );
     await voice.init();
-    return Services._(prefs, settings, auth, backend, voice, DeviceBridge());
+    return Services._(prefs, settings, auth, backend, voice, bridge);
   }
 }
 

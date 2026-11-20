@@ -5,8 +5,21 @@ import '../../core/di.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../../voice/voice_controller.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _cmd = TextEditingController();
+
+  @override
+  void dispose() {
+    _cmd.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +48,7 @@ class HomePage extends StatelessWidget {
             _ => null,
           };
           return Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + MediaQuery.of(context).viewInsets.bottom),
             child: Column(
               children: [
                 Text(t.homeTitle, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
@@ -59,6 +72,27 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(t.tapToTalk),
+                const SizedBox(height: 16),
+                // Same path as speech: handy for testing the phone-control layer without talking.
+                TextField(
+                  controller: _cmd,
+                  textInputAction: TextInputAction.send,
+                  decoration: InputDecoration(
+                    hintText: t.typeCommand,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () {
+                        voice.runText(_cmd.text);
+                        _cmd.clear();
+                      },
+                    ),
+                  ),
+                  onSubmitted: (v) {
+                    voice.runText(v);
+                    _cmd.clear();
+                  },
+                ),
               ],
             ),
           );
