@@ -1,9 +1,10 @@
 import '../core/logger.dart';
 import '../platform/device_bridge.dart';
+import 'agent_controller.dart' show ToolRunner;
 import 'tool_call.dart';
 
 /// Routes device tool calls to the native bridge. Cloud tools join in Phase 5.
-class ToolDispatcher {
+class ToolDispatcher implements ToolRunner {
   ToolDispatcher(this.bridge, {this.settle = const Duration(milliseconds: 1500)});
   final DeviceBridge bridge;
 
@@ -13,6 +14,7 @@ class ToolDispatcher {
   // Words YouTube puts on a video result row (English + Bangla UI).
   static const _videoRow = ['play video', 'ভিডিও চালান', 'ভিডিও প্লে'];
 
+  @override
   Future<ToolResult> run(ToolCall c) async {
     logd('tool', c);
     final a = c.args;

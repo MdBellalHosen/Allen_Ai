@@ -37,6 +37,24 @@ class BackendClient {
     return jsonDecode(r.body)['token'] as String;
   }
 
+  /// Authenticated JSON POST. Re-registers the device once if the token was rejected.
+  Future<Map<String, dynamic>> postJson(String path, Map<String, Object?> body, {bool retried = false}) async {
+    final token = await getToken!();
+    final r = await _http
+        .post(
+          _u(path),
+          headers: {'content-type': 'application/json', 'authorization': 'Bearer $token'},
+          body: jsonEncode(body),
+        )
+        .timeout(const Duration(seconds: 90));
+    if (r.statusCode == 401 && !retried && onUnauthorized != null) {
+      await onUnauthorized!();
+      return postJson(path, body, retried: true);
+    }
+    if (r.statusCode != 200) throw BackendException(r.statusCode, r.body);
+    return jsonDecode(utf8.decode(r.bodyBytes)) as Map<String, dynamic>;
+  }
+
   Future<SttResponse> transcribe(File audio, {String? languageHint, bool retried = false}) async {
     final token = await getToken!();
     final req = http.MultipartRequest('POST', _u('/v1/stt'))

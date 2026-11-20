@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       body: ListenableBuilder(
         listenable: voice,
         builder: (context, _) {
-          final busy = voice.state == VoiceState.processing || voice.state == VoiceState.speaking;
+          final busy = voice.agentRunning || voice.state == VoiceState.processing || voice.state == VoiceState.speaking;
           final listening = voice.state == VoiceState.listening;
           final status = switch (voice.state) {
             VoiceState.listening => t.listening,
@@ -61,6 +61,24 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 if (hint != null) Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(hint)),
+                if (voice.pendingConfirmation != null)
+                  Card(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(children: [
+                        Text(t.confirmTitle, style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(height: 8),
+                        Text(voice.pendingConfirmation!, textAlign: TextAlign.center),
+                        const SizedBox(height: 12),
+                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          FilledButton(onPressed: () => voice.answerConfirmation(true), child: Text(t.confirmYes)),
+                          const SizedBox(width: 12),
+                          OutlinedButton(onPressed: () => voice.answerConfirmation(false), child: Text(t.confirmNo)),
+                        ]),
+                      ]),
+                    ),
+                  ),
                 SizedBox(
                   width: 96,
                   height: 96,

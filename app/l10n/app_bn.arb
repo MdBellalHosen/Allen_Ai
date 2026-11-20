@@ -60,5 +60,9 @@
   },
   "typeCommand": "কমান্ড লিখুন",
   "accessibilityOn": "চালু আছে",
-  "openSettings": "সেটিংস খুলুন"
+  "openSettings": "সেটিংস খুলুন",
+  "agentError": "আমার এআই ব্রেইনের সাথে যোগাযোগ করা যাচ্ছে না। ব্যাকএন্ডের ঠিকানা ও এপিআই কী দেখুন।",
+  "confirmTitle": "নিশ্চিত করুন",
+  "confirmYes": "হ্যাঁ",
+  "confirmNo": "না"
 }

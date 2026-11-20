@@ -6,6 +6,16 @@ import '../agent/tool_call.dart';
 class DeviceBridge {
   static const _ch = MethodChannel('allen/device');
 
+  /// Kill switch: the native side calls this when the user presses volume-down 3 times quickly.
+  void Function()? onKill;
+
+  DeviceBridge() {
+    _ch.setMethodCallHandler((call) async {
+      if (call.method == 'killSwitch') onKill?.call();
+      return null;
+    });
+  }
+
   Future<ToolResult> call(String method, [Map<String, Object?>? args]) async {
     try {
       final r = await _ch.invokeMethod<Map<Object?, Object?>>(method, args);

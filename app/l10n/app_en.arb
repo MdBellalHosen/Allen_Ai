@@ -60,5 +60,9 @@
   },
   "typeCommand": "Type a command",
   "accessibilityOn": "Enabled",
-  "openSettings": "Open settings"
+  "openSettings": "Open settings",
+  "agentError": "I couldn't reach my assistant brain. Check the backend address and API key.",
+  "confirmTitle": "Please confirm",
+  "confirmYes": "Yes",
+  "confirmNo": "No"
 }

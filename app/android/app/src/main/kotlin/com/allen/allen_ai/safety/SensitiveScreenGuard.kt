@@ -4,7 +4,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 
 /**
  * Refuses to act on password / banking / payment screens (spec: user does these manually).
- * Heuristic and intentionally conservative; Phase 4 extends it. Add package keywords as needed.
+ * Heuristic and intentionally conservative. Add package keywords / phrases as needed.
  */
 object SensitiveScreenGuard {
     private val packageKeywords = listOf(
@@ -12,21 +12,31 @@ object SensitiveScreenGuard {
         "authenticator", "passwordmanager", "lastpass", "bitwarden",
     )
 
+    // Visible text that means "this screen asks for a secret".
+    private val sensitivePhrases = listOf(
+        "cvv", "card number", "enter pin", "enter your pin", "enter otp", "enter the otp", "one-time password",
+        "verification code", "enter password", "পিন দিন", "ওটিপি", "কার্ড নম্বর", "পাসওয়ার্ড দিন", "পাসওয়ার্ড",
+    )
+
     /** Returns a short reason code if the screen is sensitive, else null. */
     fun check(root: AccessibilityNodeInfo?): String? {
         if (root == null) return null
         val pkg = root.packageName?.toString()?.lowercase().orEmpty()
         if (packageKeywords.any { pkg.contains(it) }) return "payment_or_banking_app"
-        return if (hasPasswordField(root, 0)) "password_field" else null
+        return scan(root, 0)
     }
 
-    private fun hasPasswordField(n: AccessibilityNodeInfo, depth: Int): Boolean {
-        if (depth > 40) return false
-        if (n.isPassword) return true
+    private fun scan(n: AccessibilityNodeInfo, depth: Int): String? {
+        if (depth > 40) return null
+        if (n.isPassword) return "password_field"
+        if (n.isVisibleToUser) {
+            val label = ((n.text?.toString() ?: "") + " " + (n.contentDescription?.toString() ?: "")).lowercase()
+            if (label.isNotBlank() && sensitivePhrases.any { label.contains(it) }) return "secret_requested"
+        }
         for (i in 0 until n.childCount) {
             val c = n.getChild(i) ?: continue
-            if (hasPasswordField(c, depth + 1)) return true
+            scan(c, depth + 1)?.let { return it }
         }
-        return false
+        return null
     }
 }

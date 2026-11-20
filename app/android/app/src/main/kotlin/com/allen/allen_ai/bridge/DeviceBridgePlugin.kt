@@ -41,7 +41,11 @@ object DeviceBridgePlugin {
         val media = MediaController(app)
         val sys = SystemSettings(app)
 
-        MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+        val channel = MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL)
+        // Kill switch (volume-down x3 from the accessibility service) -> Dart
+        AllenAccessibilityService.killListener = { main.post { channel.invokeMethod("killSwitch", null) } }
+
+        channel.setMethodCallHandler { call, result ->
             try {
                 handle(app, call, result, launcher, media, sys)
             } catch (e: Exception) {
