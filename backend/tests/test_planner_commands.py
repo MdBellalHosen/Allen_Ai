@@ -8,7 +8,7 @@ from app.config import Settings
 from app.schemas.agent import ToolResultIn
 
 
-def tu(id, name, **inp):
+def tu(id, name, /, **inp):
     return {"type": "tool_use", "id": id, "name": name, "input": inp}
 
 
