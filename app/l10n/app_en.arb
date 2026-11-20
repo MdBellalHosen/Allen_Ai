@@ -72,5 +72,6 @@
   "saved": "Saved",
   "testConnection": "Test connection",
   "connectionOk": "Backend reachable",
-  "connectionFailed": "Could not reach the backend"
+  "connectionFailed": "Could not reach the backend",
+  "notSupportedIos": "That isn't possible on iPhone: iOS doesn't let apps control other apps."
 }

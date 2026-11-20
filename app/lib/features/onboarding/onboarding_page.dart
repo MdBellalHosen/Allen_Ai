@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -85,6 +88,7 @@ class _OnboardingPageState extends State<OnboardingPage> with WidgetsBindingObse
           _tile(t.permMic, t.permMicWhy, _mic, () => _ask(Permission.microphone, (s) => _mic = s), t.grant),
           _tile(t.permNotif, t.permNotifWhy, _notif, () => _ask(Permission.notification, (s) => _notif = s), t.grant),
           _tile(t.permMedia, t.permMediaWhy, _media, () => _ask(Permission.videos, (s) => _media = s), t.grant),
+          if (kIsWeb || !Platform.isIOS) // iPhone has no accessibility-based control
           ListTile(
             title: Text(t.permAccessibility),
             subtitle: Text(t.permAccessibilityWhy),

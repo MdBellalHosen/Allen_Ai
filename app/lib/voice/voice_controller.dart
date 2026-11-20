@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -251,7 +252,10 @@ class VoiceController extends ChangeNotifier implements AgentUi {
         text,
         ui: this,
         locale: lang == SpokenLang.bn ? 'bn' : 'en',
-        caps: {'accessibility_enabled': await bridge.isAccessibilityEnabled()},
+        caps: {
+          'platform': (!kIsWeb && Platform.isIOS) ? 'ios' : 'android',
+          'accessibility_enabled': await bridge.isAccessibilityEnabled(),
+        },
       );
       switch (outcome.end) {
         case AgentEnd.done:
@@ -281,6 +285,7 @@ class VoiceController extends ChangeNotifier implements AgentUi {
       if (m == 'node_not_found') return t.couldntFind;
       if (m == 'app_not_found' || m == 'app_not_launchable') return t.appNotFound;
       if (m == 'launch_blocked') return t.launchBlocked;
+      if (m == 'not_supported_on_ios') return t.notSupportedIos;
       return t.actionFailed;
     }
     if (results.any((r) => r.message == 'panel_opened')) return t.panelOpened;

@@ -1,0 +1,57 @@
+name: Build iOS IPA (unsigned)
+
+# Manual only: macOS runners cost 10x Linux minutes.
+# The IPA is unsigned; install it with Sideloadly / AltStore, which sign it with your Apple ID.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flutter (stable)
+        run: |
+          git clone https://github.com/flutter/flutter.git -b stable --depth 1 "$HOME/flutter"
+          echo "$HOME/flutter/bin" >> "$GITHUB_PATH"
+
+      - name: Generate iOS project files
+        working-directory: app
+        run: |
+          flutter --version
+          flutter create --org com.allen --project-name allen_ai --platforms ios .
+          rm -f test/widget_test.dart
+          ../scripts/patch_ios_build.sh
+          flutter pub get
+          flutter gen-l10n
+
+      - name: Build (no code signing)
+        working-directory: app
+        run: flutter build ios --release --no-codesign
+
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p ipa/Payload
+          cp -R app/build/ios/iphoneos/Runner.app ipa/Payload/
+          (cd ipa && zip -qry ../allen-ai-unsigned.ipa Payload)
+          ls -la allen-ai-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allen-ai-unsigned-ipa
+          path: allen-ai-unsigned.ipa
+
+      - name: Publish IPA as a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest-ipa --cleanup-tag --yes || true
+          gh release create latest-ipa allen-ai-unsigned.ipa \
+            --target "${{ github.sha }}" \
+            --prerelease \
+            --title "ALLEN AI iOS (unsigned IPA, latest)" \
+            --notes "Unsigned build of commit ${{ github.sha }}. Sign and install with Sideloadly or AltStore using your Apple ID. Free Apple ID apps expire after 7 days."
