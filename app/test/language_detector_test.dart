@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:maya/voice/language_detector.dart';
+import 'package:allen_ai/voice/language_detector.dart';
 
 void main() {
   test('Bangla script -> bn', () => expect(LanguageDetector.replyLanguage('ভলিউম বাড়াও'), SpokenLang.bn));

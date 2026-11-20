@@ -9,7 +9,7 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     secret_key: str = "change-me"
-    database_url: str = "postgresql+psycopg://maya:maya@db:5432/maya"
+    database_url: str = "postgresql+psycopg://allen:allen@db:5432/allen"
     redis_url: str = "redis://redis:6379/0"
     anthropic_api_key: str = ""
     llm_model: str = ""  # configurable, never hardcoded in code paths

@@ -9,18 +9,18 @@ import 'l10n/gen/app_localizations.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final services = await Services.create();
-  runApp(MayaApp(services: services));
+  runApp(AllenApp(services: services));
 }
 
-class MayaApp extends StatefulWidget {
-  const MayaApp({super.key, required this.services});
+class AllenApp extends StatefulWidget {
+  const AllenApp({super.key, required this.services});
   final Services services;
 
   @override
-  State<MayaApp> createState() => _MayaAppState();
+  State<AllenApp> createState() => _AllenAppState();
 }
 
-class _MayaAppState extends State<MayaApp> {
+class _AllenAppState extends State<AllenApp> {
   // Router must survive rebuilds when settings change.
   late final _router = buildRouter(onboarded: widget.services.prefs.getBool('onboarded') ?? false);
 

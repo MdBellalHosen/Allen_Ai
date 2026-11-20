@@ -9,9 +9,9 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_USER: maya
-      POSTGRES_PASSWORD: maya
-      POSTGRES_DB: maya
+      POSTGRES_USER: allen
+      POSTGRES_PASSWORD: allen
+      POSTGRES_DB: allen
     volumes: ["pgdata:/var/lib/postgresql/data"]
   redis:
     image: redis:7

@@ -1,5 +1,5 @@
-name: maya
-description: ALLEN AI — MAYA voice-controlled phone agent (Android).
+name: allen_ai
+description: ALLEN AI — voice-controlled phone agent (Android).
 publish_to: "none"
 version: 0.2.0+2
 

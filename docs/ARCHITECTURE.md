@@ -17,13 +17,13 @@ Recordings are deleted right after upload.
 ## Reply language
 Bangla script or mixed -> Bangla; Banglish words -> Bangla; pure English -> English (`LanguageDetector`).
 
-## Wake word ("Hey Maya")
+## Wake word ("Hey Allen")
 Picovoice Porcupine. You must:
 1. Create a free AccessKey at console.picovoice.ai and pass `--dart-define=PICOVOICE_ACCESS_KEY=...`.
-2. Train a custom keyword "Hey Maya" for Android, save as `app/assets/wakeword/hey_maya_android.ppn`.
-3. A Bangla "মায়া" keyword needs a Bangla Porcupine language model from Picovoice; not included yet.
+2. Train a custom keyword "Hey Allen" for Android, save as `app/assets/wakeword/hey_allen_android.ppn`.
+3. A Bangla "অ্যালেন" keyword needs a Bangla Porcupine language model from Picovoice; not included yet.
 Without these, the toggle is disabled and tap-to-talk works normally. Porcupine holds the mic, so it is
-stopped while STT runs and restarted afterwards. `MayaForegroundService` keeps the process alive with a
+stopped while STT runs and restarted afterwards. `AllenForegroundService` keeps the process alive with a
 notification (Android 14+: it must be started while the app is visible, which the Settings toggle does).
 
 ## Auth

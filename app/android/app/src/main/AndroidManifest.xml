@@ -31,10 +31,10 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".service.MayaForegroundService"
+            android:name=".service.AllenForegroundService"
             android:exported="false"
             android:foregroundServiceType="microphone" />
         <meta-data android:name="flutterEmbedding" android:value="2" />
-        <!-- Phase 3: MayaAccessibilityService + overlay permission. -->
+        <!-- Phase 3: AllenAccessibilityService + overlay permission. -->
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-package com.allen.maya.service
+package com.allen.allen_ai.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -15,19 +15,19 @@ import androidx.core.app.NotificationCompat
  * The Porcupine detection itself runs in the Dart side of the same process.
  * Android 14+: a microphone foreground service must be started while the app is visible.
  */
-class MayaForegroundService : Service() {
+class AllenForegroundService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val nm = getSystemService(NotificationManager::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             nm.createNotificationChannel(
-                NotificationChannel(CHANNEL_ID, "MAYA listening", NotificationManager.IMPORTANCE_LOW)
+                NotificationChannel(CHANNEL_ID, "ALLEN listening", NotificationManager.IMPORTANCE_LOW)
             )
         }
         val n: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("ALLEN AI")
-            .setContentText("MAYA is listening for the wake word")
+            .setContentText("ALLEN is listening for the wake word")
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)
             .setOngoing(true)
             .build()
@@ -40,7 +40,7 @@ class MayaForegroundService : Service() {
     }
 
     companion object {
-        private const val CHANNEL_ID = "maya_listening"
+        private const val CHANNEL_ID = "allen_listening"
         private const val NOTIF_ID = 1001
     }
 }

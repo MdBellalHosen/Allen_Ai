@@ -5,5 +5,5 @@ class AppConfig {
   static const registrationCode = String.fromEnvironment('REGISTRATION_CODE');
   // Wake word key is a per-app Picovoice AccessKey (not a backend secret).
   static const picovoiceAccessKey = String.fromEnvironment('PICOVOICE_ACCESS_KEY');
-  static const wakeWordAsset = 'assets/wakeword/hey_maya_android.ppn';
+  static const wakeWordAsset = 'assets/wakeword/hey_allen_android.ppn';
 }

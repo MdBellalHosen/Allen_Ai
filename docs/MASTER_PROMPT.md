@@ -1,4 +1,4 @@
-# MAYA — Voice-Controlled Phone Agent (by ALLEN AI)
+# ALLEN — Voice-Controlled Phone Agent (by ALLEN AI)
 
 Paste everything below the line into Claude Code as your first message, in an empty project folder.
 
@@ -6,15 +6,15 @@ Paste everything below the line into Claude Code as your first message, in an em
 
 ## 0. Your role
 
-You are a senior Android + backend engineer. Build **ALLEN AI**, an Android app whose assistant is named **MAYA**. The user speaks (in **Bangla, English, or mixed Banglish**) and MAYA controls the phone and manages social media on their behalf. Build it in phases (Section 9). After each phase, run what can be run, show me what works, and stop for my review before the next phase. Do not add a Claude co-author line to any git commit.
+You are a senior Android + backend engineer. Build **ALLEN AI**, an Android app whose assistant is named **ALLEN**. The user speaks (in **Bangla, English, or mixed Banglish**) and ALLEN controls the phone and manages social media on their behalf. Build it in phases (Section 9). After each phase, run what can be run, show me what works, and stop for my review before the next phase. Do not add a Claude co-author line to any git commit.
 
 ## 1. Product vision
 
 "Speak, and the phone obeys." Examples of what the user says:
 
-| Voice command (Bangla / English) | What MAYA does |
+| Voice command (Bangla / English) | What ALLEN does |
 |---|---|
-| "মায়া, এই ভিডিওটা Instagram আর Facebook এ আপলোড করো" / "Upload this video to Instagram and Facebook" | Picks the video, writes title + caption + hashtags, shows a preview, asks "Post korbo?", then posts |
+| "অ্যালেন, এই ভিডিওটা Instagram আর Facebook এ আপলোড করো" / "Upload this video to Instagram and Facebook" | Picks the video, writes title + caption + hashtags, shows a preview, asks "Post korbo?", then posts |
 | "YouTube এ ঢুকে 'Arijit Singh' সার্চ করো" | Opens YouTube, taps search, types, plays first result |
 | "গান বদলাও" / "Next song" / "Music pause koro" | Controls the active media session |
 | "ভলিউম বাড়াও", "Wi-Fi অফ করো", "টর্চ জ্বালাও" | System controls |
@@ -31,7 +31,7 @@ You are a senior Android + backend engineer. Build **ALLEN AI**, an Android app 
    - **YouTube**: YouTube Data API v3 `videos.insert` (optional, Phase 5).
    - Accessibility-based posting is only a **fallback** when no API path exists.
 4. **"Trending hashtags"**: Instagram has no official trending-hashtag API. Implement a `HashtagService` that combines (a) LLM-generated niche + broad tags from the video's content/topic, (b) optional trend signals (Google Trends via a pluggable provider, YouTube trending/most-popular API), and (c) a user-editable "my hashtag sets" list. Label the output honestly as "suggested", not "guaranteed trending".
-5. **Safety**: Any irreversible or outward-facing action (post, send message, delete, payment, call) requires a spoken or tapped **confirmation** with a readable preview. Never auto-run payments, banking, or password screens; MAYA must refuse and tell the user to do it manually.
+5. **Safety**: Any irreversible or outward-facing action (post, send message, delete, payment, call) requires a spoken or tapped **confirmation** with a readable preview. Never auto-run payments, banking, or password screens; ALLEN must refuse and tell the user to do it manually.
 6. **Secrets**: No API keys in the APK. All LLM calls and social tokens live on the backend. The app talks only to my backend with a per-device token.
 7. **Privacy**: Screen content is read only while a command is executing. Nothing is logged to the cloud unless the user enables "debug logs". Show a clear consent screen for Accessibility, Microphone, Notifications, and Media access.
 8. **Play Store note**: Google restricts Accessibility API use. Build for personal/sideload use first; add a README section on policy risk. Don't hide it.
@@ -43,7 +43,7 @@ You are a senior Android + backend engineer. Build **ALLEN AI**, an Android app 
 - **LLM brain**: Claude API with **tool use**. The model receives the transcript + compact screen state and returns structured tool calls (see Section 5). Make the model name a config value (`LLM_MODEL`), not hardcoded.
 - **Speech-to-text (STT)**: Provider interface with two implementations: (a) on-device Android `SpeechRecognizer` with `bn-BD` / `en-US` for low latency, (b) cloud fallback (Whisper API or Google Cloud STT) for better Bangla accuracy. Auto-detect language per utterance; handle code-switching.
 - **Text-to-speech (TTS)**: Android TTS with `bn-BD` and `en-US`; reply in the language the user spoke.
-- **Wake word**: "Hey Maya" / "মায়া" via Picovoice Porcupine (custom keyword) in a foreground service, with a tap-to-talk button and a floating overlay button as fallbacks.
+- **Wake word**: "Hey Allen" / "অ্যালেন" via Picovoice Porcupine (custom keyword) in a foreground service, with a tap-to-talk button and a floating overlay button as fallbacks.
 - **Video pipeline**: `ffmpeg` on the backend for thumbnail + optional transcode to Instagram-compatible H.264/AAC, 9:16, ≤90s for Reels.
 
 ## 4. How a voice command flows
@@ -59,7 +59,7 @@ Wake word / tap
   → result → TTS reply in user's language
 ```
 
-Multi-step tasks (e.g. "open YouTube, search X, play first result") run as a loop: execute step → read new screen → ask LLM for next step → until `done` or `max_steps` (default 15) or user says "থামো/stop". Add a global **kill switch** (volume-down ×3, or say "Maya stop") that aborts everything instantly.
+Multi-step tasks (e.g. "open YouTube, search X, play first result") run as a loop: execute step → read new screen → ask LLM for next step → until `done` or `max_steps` (default 15) or user says "থামো/stop". Add a global **kill switch** (volume-down ×3, or say "Allen stop") that aborts everything instantly.
 
 ## 5. Tool contract (LLM ↔ app)
 
@@ -79,7 +79,7 @@ Selectors must prefer `resource-id` / `contentDescription` / visible text, with 
 ## 6. Social media feature spec
 
 1. **Voice upload flow**: user says "upload this video" → `pick_media` (latest video or user-chosen) → backend upload → `generate_post_content` → show a preview card (video thumbnail, title, caption, hashtags, selected platforms) → read it aloud in short form → ask for confirmation → `publish_post` per platform → report success/failure per platform with a link.
-2. **Caption/title generation**: platform-aware (Instagram: short hook + hashtags; Facebook: slightly longer; YouTube: SEO title + description). Tone presets: funny, professional, emotional, promotional. Language: Bangla, English, or Banglish. User can say "caption ta aro choto koro" and MAYA regenerates.
+2. **Caption/title generation**: platform-aware (Instagram: short hook + hashtags; Facebook: slightly longer; YouTube: SEO title + description). Tone presets: funny, professional, emotional, promotional. Language: Bangla, English, or Banglish. User can say "caption ta aro choto koro" and ALLEN regenerates.
 3. **Hashtags**: 8–15 per post, mix of broad + niche + a Bangladesh-local set when relevant; de-duplicate; user can pin favorite sets.
 4. **Scheduling**: "কাল সন্ধ্যা ৭টায় পোস্ট করো" → parse Bangla/English date-time in the `Asia/Dhaka` timezone → store job → publish via worker.
 5. **Accounts**: OAuth connect screens for Facebook Page + Instagram Business; tokens encrypted at rest (Fernet/KMS), with refresh handling and a clear "reconnect" error path.
@@ -135,11 +135,11 @@ allen-ai/
 │   └── android/app/src/main/
 │       ├── AndroidManifest.xml
 │       ├── res/xml/accessibility_service_config.xml
-│       └── kotlin/com/allen/maya/
+│       └── kotlin/com/allen/allen_ai/
 │           ├── MainActivity.kt
 │           ├── bridge/DeviceBridgePlugin.kt
 │           ├── accessibility/
-│           │   ├── MayaAccessibilityService.kt
+│           │   ├── AllenAccessibilityService.kt
 │           │   ├── ScreenReader.kt       # compact screen tree
 │           │   ├── NodeFinder.kt         # fuzzy bn/en selector matching
 │           │   └── GestureExecutor.kt
@@ -149,7 +149,7 @@ allen-ai/
 │           │   ├── SystemSettings.kt
 │           │   └── MediaPicker.kt
 │           ├── service/
-│           │   ├── MayaForegroundService.kt   # wake word + overlay
+│           │   ├── AllenForegroundService.kt   # wake word + overlay
 │           │   └── OverlayButton.kt
 │           └── safety/SensitiveScreenGuard.kt # blocks bank/password screens
 │
@@ -204,11 +204,11 @@ allen-ai/
 
 ## 10. Acceptance criteria
 
-- Saying "মায়া, YouTube এ গিয়ে 'lofi music' সার্চ করে প্রথম ভিডিও চালাও" works end-to-end without touching the phone.
+- Saying "অ্যালেন, YouTube এ গিয়ে 'lofi music' সার্চ করে প্রথম ভিডিও চালাও" works end-to-end without touching the phone.
 - Saying "Upload this video to Instagram and Facebook" produces a preview with title, caption, hashtags, and **does not post until I confirm**.
 - Bangla, English, and Banglish versions of the same command produce the same tool calls.
-- "Maya stop" aborts any running task within 1 second.
-- Banking / password / payment screens are detected and MAYA refuses to act on them.
+- "Allen stop" aborts any running task within 1 second.
+- Banking / password / payment screens are detected and ALLEN refuses to act on them.
 - No secrets in the APK; `.env.example` lists every key needed; backend tests pass in CI.
 
 ## 11. Working rules for you (Claude Code)

@@ -1,6 +1,6 @@
-package com.allen.maya
+package com.allen.allen_ai
 
-import com.allen.maya.bridge.DeviceBridgePlugin
+import com.allen.allen_ai.bridge.DeviceBridgePlugin
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 

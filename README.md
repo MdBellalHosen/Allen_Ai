@@ -1,10 +1,10 @@
 # ALLEN AI
 
-Voice-controlled Android phone agent (Bangla + English + Banglish). Say a command and MAYA controls the phone and posts to social media.
+Voice-controlled Android phone agent (Bangla + English + Banglish). Say a command and ALLEN controls the phone and posts to social media.
 
 - Full spec / build prompt: [docs/MASTER_PROMPT.md](docs/MASTER_PROMPT.md)
 - Android only (iOS does not let an app control other apps).
-- Status: **Phase 2** (voice loop: tap-to-talk + optional "Hey Maya" wake word, Bangla/English STT, TTS echo).
+- Status: **Phase 2** (voice loop: tap-to-talk + optional "Hey Allen" wake word, Bangla/English STT, TTS echo).
 
 ## Run backend
 ```bash
@@ -14,7 +14,7 @@ Voice-controlled Android phone agent (Bangla + English + Banglish). Say a comman
 ## Run app
 ```bash
 cd app
-flutter create --org com.allen --project-name maya --platforms android .   # one time, generates the android/ gradle files. It must keep package com.allen.maya;
+flutter create --org com.allen --project-name allen_ai --platforms android .   # one time, generates the android/ gradle files. It must keep package com.allen.allen_ai;
 # if it overwrites AndroidManifest.xml / MainActivity.kt, restore them with `git checkout -- android/app/src/main`
 flutter gen-l10n
 flutter run \
